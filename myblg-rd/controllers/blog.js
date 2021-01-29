@@ -53,25 +53,25 @@ module.exports = {
 
 	// 我
 	async post(ctx) {
-	    let userId = 5;
-	    let { title, message,outline } = ctx.request.body;
-	    let results = await model.saveblog({
-	        title: title,
-	        content: message,
-	        user_id: userId,
+		let userId = 5;
+		let { title, message, outline } = ctx.request.body;
+		let results = await model.saveblog({
+			title: title,
+			content: message,
+			user_id: userId,
 			outline
-	    });
-	    console.log(results);
-	    if (results.insertId) {
-	        ctx.body = {
-	            status: 'success'
-	        }
-	    } else {
-	        ctx.status = 404;
-	        ctx.body = {
-	            status: 'fail'
-	        }
-	    }
+		});
+		console.log(results);
+		if (results.insertId) {
+			ctx.body = {
+				status: 'success'
+			}
+		} else {
+			ctx.status = 404;
+			ctx.body = {
+				status: 'fail'
+			}
+		}
 	},
 
 	async index(ctx) {
@@ -83,28 +83,29 @@ module.exports = {
 	},
 	async search(ctx) {
 		console.log(ctx.query)
-		let {message}=ctx.query
+		let { message } = ctx.query
 		let results = await model.searchBlogs(message);
 		console.log(results)
 		exchange(results);
-		if(results.length>0){
+		if (results.length > 0) {
 			ctx.body = {
 				blogs: results,
-				state:'sucess'
+				state: 'sucess'
 			}
-		}else{
-			ctx.status=404,
-			ctx.body={
-				state:'fail'
-			}
+		} else {
+			ctx.status = 404,
+				ctx.body = {
+					state: 'fail'
+				}
 		}
-		
+
 	},
 	async detail(ctx) {
 		console.log(ctx.query);
 		let { blogId } = ctx.query;
 		let results = await model.getBlogById(blogId);
 		exchange(results);
+		console.log(results.length);
 		if (results.length > 0) {
 			let { blog_id, title, content, post_time } = results[0];
 			let blogInfo = {
@@ -116,14 +117,11 @@ module.exports = {
 			blogInfo.comments = [];
 			for (let i = 0; i < results.length; i++) {
 				let obj = results[i];
-				let reses=await model.getCommRes(obj.comm_id);
-				exchange(reses);
 				blogInfo.comments.unshift({
 					comm_id: obj.comm_id,
 					comm_content: obj.comm_content,
 					comm_post_time: formatTime(obj.comm_post_time),
 					username: obj.username,
-					reses,
 				});
 			}
 			console.log(blogInfo);

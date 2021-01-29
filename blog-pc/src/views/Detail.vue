@@ -47,7 +47,8 @@
             >发表评论</el-button
           >
         </div>
-        <div v-if="flag != null">
+        <!-- v-if="flag != null" -->
+        <div>
           <div
             style="margin: 20px 0"
             v-for="(item, index) in blog.comments"
