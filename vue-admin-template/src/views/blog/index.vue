@@ -2,7 +2,7 @@
   <div class="components-container">
     <div class="editor-container" style="padding: 20px">
       <div class="inputDeep" style="margin-bottom: 20px; display: flex">
-        <el-tag type="success">题目</el-tag>
+        <el-tag type="success">标题</el-tag>
         <el-input v-model="input" placeholder="请输入内容"></el-input><br />
       </div>
       <div style="margin-bottom: 20px; display: flex">
@@ -72,21 +72,29 @@ export default {
   },
   methods: {
     getHtml() {
-      this.html = this.$refs.markdownEditor.getHtml();
-      console.log(this.html);
-      this.axios
-        .post("http://localhost:3000/blog/post", {
-          title: this.input,
-          message: this.html,
-          outline: this.outline,
-        })
-        .then((res) => {
-          alert("发表成功");
-          console.log(res);
-          this.html = "";
-          this.content = "";
-          this.input = "";
+      if (this.input.trim() == "" || this.outlin.trim() == "") {
+        this.$message({
+          showClose: true,
+          message: "题目或简介不能为空",
+          type: "warning",
         });
+      } else {
+        this.html = this.$refs.markdownEditor.getHtml();
+        console.log(this.html);
+        this.axios
+          .post("http://localhost:3000/blog/post", {
+            title: this.input,
+            message: this.html,
+            outline: this.outline,
+          })
+          .then((res) => {
+            alert("发表成功");
+            console.log(res);
+            this.html = "";
+            this.content = "";
+            this.input = "";
+          });
+      }
     },
   },
 };
