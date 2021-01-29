@@ -105,7 +105,6 @@ module.exports = {
 		let { blogId } = ctx.query;
 		let results = await model.getBlogById(blogId);
 		exchange(results);
-		console.log(results.length);
 		if (results.length > 0) {
 			let { blog_id, title, content, post_time } = results[0];
 			let blogInfo = {
@@ -123,6 +122,13 @@ module.exports = {
 					comm_post_time: formatTime(obj.comm_post_time),
 					username: obj.username,
 				});
+				try {
+					let reses = await model.getCommRes(obj.comm_id);
+					exchange(reses);
+					blogInfo.comments[0].reses = reses
+				} catch (err) {
+					console.log(err);
+				}
 			}
 			console.log(blogInfo);
 
